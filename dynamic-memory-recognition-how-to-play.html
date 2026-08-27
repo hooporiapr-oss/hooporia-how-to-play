@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Recognition · How To Play</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#000;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+body{font-family:Arial,Helvetica,sans-serif;color:#fff}
+
+:root{--purple:#7c3aed;--purple-light:#a855f7;--orange:#f37418;--gold:#ffd35a;--teal:#00D9A5;--cream:#c9b8a8}
+
+#stage{position:fixed;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at center,#1a0f0f 0%,#000 70%)}
+#panel{position:relative;z-index:2;width:100%;max-width:640px;max-height:100%;overflow-y:auto;text-align:center}
+#panel::-webkit-scrollbar{width:6px}
+#panel::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:10px}
+
+.back-link{display:inline-block;padding:8px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.5);color:#fff;font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;margin-bottom:18px}
+
+.nav-lang{display:inline-flex;gap:3px;margin-left:10px;vertical-align:middle}
+.nav-lang-btn{padding:6px 10px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.5);color:#9a9088;border-radius:6px;font-size:.66rem;font-weight:800;cursor:pointer;letter-spacing:.04em}
+.nav-lang-btn.active{border-color:var(--gold);color:var(--gold)}
+
+.demo-badge{display:inline-block;background:rgba(255,215,90,.12);border:1px solid rgba(255,215,90,.35);color:var(--gold);font-size:.62rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:10px}
+.demo-title{font-size:2.2rem;font-weight:900;font-style:italic;letter-spacing:.02em;text-transform:uppercase;text-shadow:0 0 40px rgba(255,107,53,.5);margin-bottom:4px}
+.demo-title span{color:var(--orange)}
+.demo-subtitle{font-size:.85rem;font-weight:700;color:var(--cream);letter-spacing:.04em;margin-bottom:22px}
+
+.demo-label{font-family:Arial,Helvetica,sans-serif;font-size:.72rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);background:rgba(0,0,0,.85);padding:5px 14px;border-radius:10px;display:inline-block;margin-bottom:12px;border:1px solid rgba(255,215,90,.3);transition:all .3s}
+.demo-label.phase-echo{color:#c9a3fa;border-color:rgba(168,85,247,.4)}
+.demo-label.phase-find{color:var(--teal);border-color:rgba(0,217,165,.4)}
+.demo-label.phase-success{color:var(--teal);border-color:rgba(0,217,165,.5)}
+
+.demo-court-wrap{display:flex;justify-content:center;margin-bottom:22px}
+.demo-court{display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(5,1fr);gap:4px;padding:10px;background:#1a1108;border-radius:14px;border:2px solid rgba(243,116,24,.3);width:100%;max-width:440px;aspect-ratio:2/1;box-shadow:0 0 50px rgba(243,116,24,.15),inset 0 0 30px rgba(0,0,0,.4)}
+.demo-cell{border-radius:5px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;color:transparent;transition:all .12s}
+.demo-cell.lit{background:var(--gold);border-color:var(--gold);box-shadow:0 0 14px rgba(255,215,90,.6);transform:scale(1.08);color:#1a0f00}
+.demo-cell.echo-lit{background:var(--purple-light);border-color:var(--purple-light);box-shadow:0 0 14px rgba(168,85,247,.6);transform:scale(1.08);color:#1a0f2e}
+.demo-cell.correct{background:var(--teal);border-color:var(--teal);box-shadow:0 0 14px rgba(0,217,165,.55);color:#04231b}
+.demo-court.joy-pulse{animation:joyPulse .5s ease-out}
+@keyframes joyPulse{0%{box-shadow:0 0 0 0 rgba(0,217,165,.6)}50%{box-shadow:0 0 40px 10px rgba(0,217,165,.35)}100%{box-shadow:none}}
+
+.playbook-section{max-width:520px;margin:0 auto 20px;text-align:left}
+.playbook-toggle{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(255,215,90,.05));border:1px solid rgba(124,58,237,.3);border-radius:12px;cursor:pointer;transition:all .3s}
+.playbook-toggle-icon{font-size:1rem}
+.playbook-toggle-text{font-size:.8rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff}
+.playbook-toggle-arrow{color:var(--purple-light);transition:transform .3s;margin-left:auto}
+.playbook-toggle.open .playbook-toggle-arrow{transform:rotate(180deg)}
+.playbook-content{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.playbook-content.open{max-height:700px}
+.playbook-inner{padding:16px 4px 4px}
+.playbook-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.playbook-card-title{font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.playbook-step{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start}
+.playbook-step:last-child{margin-bottom:0}
+.playbook-step-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(124,58,237,.2);color:var(--purple-light);font-size:.68rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.playbook-step-text{font-size:.78rem;line-height:1.5;color:var(--cream)}
+.playbook-step-text strong{color:#fff}
+.playbook-tip{background:rgba(255,215,90,.06);border-left:3px solid var(--gold);padding:9px 12px;border-radius:0 8px 8px 0;margin-top:10px}
+.playbook-tip-title{font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
+.playbook-tip-text{font-size:.76rem;color:var(--cream);line-height:1.5}
+
+footer{margin-top:4px;font-size:.68rem;color:#6b5d52;letter-spacing:.02em}
+
+@media(max-width:480px){.demo-title{font-size:1.6rem}.demo-court{max-width:320px}}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="panel">
+    <a href="dynamic-memory-hub.html" class="back-link" id="backLink">← Back to Hub</a>
+    <div class="nav-lang">
+      <button class="nav-lang-btn active" id="langEN">EN</button>
+      <button class="nav-lang-btn" id="langES">ES</button>
+    </div>
+
+    <div class="demo-badge" id="quarterBadge">Quarter 4</div>
+    <div class="demo-title">RECOG<span>NITION</span></div>
+    <div class="demo-subtitle" id="demoSubtitle">Watch. Watch Again. Spot the Change.</div>
+
+    <div class="demo-court-wrap">
+      <div style="width:100%;max-width:440px">
+        <div class="demo-label" id="demoLabel">👁️ WATCH ORIGINAL</div>
+        <div class="demo-court" id="demoCourt"></div>
+      </div>
+    </div>
+
+    <div class="playbook-section">
+      <div class="playbook-toggle" id="playbookToggle">
+        <span class="playbook-toggle-icon">📖</span>
+        <span class="playbook-toggle-text" id="playbookToggleText">The Playbook</span>
+        <span class="playbook-toggle-arrow">▼</span>
+      </div>
+      <div class="playbook-content" id="playbookContent">
+        <div class="playbook-inner">
+          <div class="playbook-card">
+            <div class="playbook-card-title">🎯 <span id="objectiveTitle">Objective</span></div>
+            <div class="playbook-step"><div class="playbook-step-num">1</div><div class="playbook-step-text" id="step1"><strong>Watch</strong> the original sequence — cells light up one at a time, gold.</div></div>
+            <div class="playbook-step"><div class="playbook-step-num">2</div><div class="playbook-step-text" id="step2"><strong>Watch</strong> the echo — the same sequence again, purple this time, but ONE cell is different.</div></div>
+            <div class="playbook-step"><div class="playbook-step-num">3</div><div class="playbook-step-text" id="step3"><strong>Tap</strong> the cell that changed — from memory, on a blank grid with no hints shown.</div></div>
+          </div>
+          <div class="playbook-card">
+            <div class="playbook-card-title">⭐ <span id="progressionTitle">Progression</span></div>
+            <div class="playbook-step"><div class="playbook-step-num">→</div><div class="playbook-step-text" id="prog1">Starts at <strong>3 cells</strong> in the sequence — every correct round adds one more.</div></div>
+            <div class="playbook-step"><div class="playbook-step-num">→</div><div class="playbook-step-text" id="prog2">A correct answer earns an <strong>escalation bonus</strong> on top of the base score — the longer the sequence, the bigger the bonus.</div></div>
+            <div class="playbook-step"><div class="playbook-step-num">→</div><div class="playbook-step-text" id="prog3">Fixed at <strong>100 BPM</strong> — the pace stays constant, only the sequence length grows.</div></div>
+          </div>
+          <div class="playbook-card">
+            <div class="playbook-card-title">🎮 <span id="modesTitle">Game vs. Training</span></div>
+            <div class="playbook-step"><div class="playbook-step-num">🏀</div><div class="playbook-step-text" id="mode1"><strong>Game</strong> — the real, escalating run. Starts at 3 cells and keeps growing until you miss.</div></div>
+            <div class="playbook-step"><div class="playbook-step-num">🏋️</div><div class="playbook-step-text" id="mode2"><strong>Training</strong> — pick a fixed level (1–5) and complete 10 rounds at that exact length to practice.</div></div>
+            <div class="playbook-tip">
+              <div class="playbook-tip-title">💡 <span id="tipTitle">Tip</span></div>
+              <div class="playbook-tip-text" id="tipText">The answer never gets shown until you've genuinely used up your chances — a wrong tap in standalone play opens up to two REPEAT windows at a reduced score, and only reveals the real answer once those are gone. In the tracked Full Game, a miss ends that quarter immediately.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>Gostar Digital LLC</footer>
+  </div>
+</div>
+
+<script>
+(function(){
+var demoCourt=document.getElementById('demoCourt');
+var demoLabel=document.getElementById('demoLabel');
+var demoCells=[];
+var GRID_SIZE=50;
+
+var currentLang='en';
+var translations={
+  en:{
+    backLink:'← Back to Hub',
+    quarterBadge:'Quarter 4',
+    demoSubtitle:'Watch. Watch Again. Spot the Change.',
+    demoLabelWatch:'👁️ WATCH ORIGINAL',
+    demoLabelEcho:'👁️ NOW THE ECHO',
+    demoLabelFind:'⚡ TAP WHAT CHANGED',
+    demoLabelSuccess:'✅ SEQUENCE GROWS!',
+    playbookToggleText:'The Playbook',
+    objectiveTitle:'Objective',
+    step1:'<strong>Watch</strong> the original sequence — cells light up one at a time, gold.',
+    step2:'<strong>Watch</strong> the echo — the same sequence again, purple this time, but ONE cell is different.',
+    step3:'<strong>Tap</strong> the cell that changed — from memory, on a blank grid with no hints shown.',
+    progressionTitle:'Progression',
+    prog1:'Starts at <strong>3 cells</strong> in the sequence — every correct round adds one more.',
+    prog2:'A correct answer earns an <strong>escalation bonus</strong> on top of the base score — the longer the sequence, the bigger the bonus.',
+    prog3:'Fixed at <strong>100 BPM</strong> — the pace stays constant, only the sequence length grows.',
+    modesTitle:'Game vs. Training',
+    mode1:'<strong>Game</strong> — the real, escalating run. Starts at 3 cells and keeps growing until you miss.',
+    mode2:'<strong>Training</strong> — pick a fixed level (1–5) and complete 10 rounds at that exact length to practice.',
+    tipTitle:'Tip',
+    tipText:'The answer never gets shown until you\'ve genuinely used up your chances — a wrong tap in standalone play opens up to two REPEAT windows at a reduced score, and only reveals the real answer once those are gone. In the tracked Full Game, a miss ends that quarter immediately.'
+  },
+  es:{
+    backLink:'← Volver al Centro',
+    quarterBadge:'Cuarto 4',
+    demoSubtitle:'Mira. Mira de Nuevo. Encuentra el Cambio.',
+    demoLabelWatch:'👁️ MIRA EL ORIGINAL',
+    demoLabelEcho:'👁️ AHORA EL ECO',
+    demoLabelFind:'⚡ TOCA LO QUE CAMBIÓ',
+    demoLabelSuccess:'✅ ¡LA SECUENCIA CRECE!',
+    playbookToggleText:'El Playbook',
+    objectiveTitle:'Objetivo',
+    step1:'<strong>Mira</strong> la secuencia original — las celdas se encienden una por una, en dorado.',
+    step2:'<strong>Mira</strong> el eco — la misma secuencia otra vez, esta vez en morado, pero UNA celda es diferente.',
+    step3:'<strong>Toca</strong> la celda que cambió — de memoria, en una cuadrícula vacía sin pistas.',
+    progressionTitle:'Progresión',
+    prog1:'Empieza con <strong>3 celdas</strong> en la secuencia — cada ronda correcta añade una más.',
+    prog2:'Una respuesta correcta gana un <strong>bono de escalada</strong> encima del puntaje base — mientras más larga la secuencia, más grande el bono.',
+    prog3:'Fijo a <strong>100 BPM</strong> — el ritmo se mantiene constante, solo crece la secuencia.',
+    modesTitle:'Juego vs. Entrenamiento',
+    mode1:'<strong>Juego</strong> — la corrida real y escalante. Empieza con 3 celdas y sigue creciendo hasta que falles.',
+    mode2:'<strong>Entrenamiento</strong> — escoge un nivel fijo (1–5) y completa 10 rondas en ese nivel exacto para practicar.',
+    tipTitle:'Consejo',
+    tipText:'La respuesta nunca se revela hasta que genuinamente se te acaben las oportunidades — un toque equivocado en modo práctica abre hasta dos ventanas de REPETIR con puntaje reducido, y solo revela la respuesta real cuando esas se acaben. En el Juego Completo, un fallo termina ese cuarto de inmediato.'
+  }
+};
+function t(key){return translations[currentLang][key]||translations.en[key]||key}
+function updateUILanguage(){
+  document.getElementById('backLink').textContent=t('backLink');
+  document.getElementById('quarterBadge').textContent=t('quarterBadge');
+  document.getElementById('demoSubtitle').textContent=t('demoSubtitle');
+  document.getElementById('playbookToggleText').textContent=t('playbookToggleText');
+  document.getElementById('objectiveTitle').textContent=t('objectiveTitle');
+  document.getElementById('step1').innerHTML=t('step1');
+  document.getElementById('step2').innerHTML=t('step2');
+  document.getElementById('step3').innerHTML=t('step3');
+  document.getElementById('progressionTitle').textContent=t('progressionTitle');
+  document.getElementById('prog1').innerHTML=t('prog1');
+  document.getElementById('prog2').innerHTML=t('prog2');
+  document.getElementById('prog3').innerHTML=t('prog3');
+  document.getElementById('modesTitle').textContent=t('modesTitle');
+  document.getElementById('mode1').innerHTML=t('mode1');
+  document.getElementById('mode2').innerHTML=t('mode2');
+  document.getElementById('tipTitle').textContent=t('tipTitle');
+  document.getElementById('tipText').textContent=t('tipText');
+  document.getElementById('langEN').classList.toggle('active',currentLang==='en');
+  document.getElementById('langES').classList.toggle('active',currentLang==='es');
+  updateDemoLabelForCurrentPhase();
+}
+function setLang(l){
+  currentLang=l;
+  try{localStorage.setItem('lc-lang',l)}catch(e){}
+  updateUILanguage();
+}
+document.getElementById('langEN').onclick=function(){setLang('en')};
+document.getElementById('langES').onclick=function(){setLang('es')};
+var savedLang;
+try{savedLang=localStorage.getItem('lc-lang')}catch(e){}
+if(savedLang)currentLang=savedLang;
+
+function initDemoCourt(){
+  demoCourt.innerHTML='';demoCells=[];
+  for(var i=0;i<GRID_SIZE;i++){
+    var c=document.createElement('div');
+    c.className='demo-cell';
+    demoCourt.appendChild(c);
+    demoCells.push(c);
+  }
+}
+
+var demoEpoch=0,demoTimeouts=[];
+function setDemoTimeout(fn,delay){
+  var id=setTimeout(function(){
+    var idx=demoTimeouts.indexOf(id);
+    if(idx>-1)demoTimeouts.splice(idx,1);
+    fn();
+  },delay);
+  demoTimeouts.push(id);
+  return id;
+}
+function clearDemoTimeouts(){demoTimeouts.forEach(function(id){clearTimeout(id)});demoTimeouts=[]}
+
+function resetDemoCells(){
+  demoCells.forEach(function(c){c.className='demo-cell';c.textContent=''});
+}
+
+// A fixed, illustrative demo — genuinely representative of the real
+// mechanic (sequential original, sequential echo with one swapped
+// cell, then a blank-grid recall), not a literal recording of live
+// gameplay. Position 2 (index 1) is the one that changes: original
+// cell 23 becomes echo cell 16 — both genuinely in-bounds for the
+// 50-cell (10x5) grid.
+var DEMO_ORIGINAL=[7,23,34,41];
+var DEMO_ECHO=[7,16,34,41];
+var DEMO_CHANGE_POS=1;
+var DEMO_ORIGINAL_CELL=DEMO_ORIGINAL[DEMO_CHANGE_POS];
+var DEMO_CHANGED_CELL=DEMO_ECHO[DEMO_CHANGE_POS];
+
+var demoPhase='watch';
+function updateDemoLabelForCurrentPhase(){
+  if(demoPhase==='watch'){demoLabel.textContent=t('demoLabelWatch');demoLabel.className='demo-label'}
+  else if(demoPhase==='echo'){demoLabel.textContent=t('demoLabelEcho');demoLabel.className='demo-label phase-echo'}
+  else if(demoPhase==='find'){demoLabel.textContent=t('demoLabelFind');demoLabel.className='demo-label phase-find'}
+  else if(demoPhase==='success'){demoLabel.textContent=t('demoLabelSuccess');demoLabel.className='demo-label phase-success'}
+}
+
+function runDemoRound(epoch){
+  if(epoch!==demoEpoch)return;
+  resetDemoCells();
+  demoPhase='watch';
+  updateDemoLabelForCurrentPhase();
+  setDemoTimeout(function(){playWatch(0,epoch)},500);
+}
+
+function playWatch(step,epoch){
+  if(epoch!==demoEpoch)return;
+  if(step>0){
+    demoCells[DEMO_ORIGINAL[step-1]].classList.remove('lit');
+    demoCells[DEMO_ORIGINAL[step-1]].textContent='';
+  }
+  if(step<DEMO_ORIGINAL.length){
+    var idx=DEMO_ORIGINAL[step];
+    demoCells[idx].classList.add('lit');
+    demoCells[idx].textContent=step+1;
+    setDemoTimeout(function(){playWatch(step+1,epoch)},600);
+  }else{
+    setDemoTimeout(function(){
+      if(epoch!==demoEpoch)return;
+      resetDemoCells();
+      demoPhase='echo';
+      updateDemoLabelForCurrentPhase();
+      playEcho(0,epoch);
+    },500);
+  }
+}
+
+function playEcho(step,epoch){
+  if(epoch!==demoEpoch)return;
+  if(step>0){
+    demoCells[DEMO_ECHO[step-1]].classList.remove('echo-lit');
+    demoCells[DEMO_ECHO[step-1]].textContent='';
+  }
+  if(step<DEMO_ECHO.length){
+    var idx=DEMO_ECHO[step];
+    demoCells[idx].classList.add('echo-lit');
+    demoCells[idx].textContent=step+1;
+    setDemoTimeout(function(){playEcho(step+1,epoch)},600);
+  }else{
+    setDemoTimeout(function(){
+      if(epoch!==demoEpoch)return;
+      resetDemoCells();
+      demoPhase='find';
+      updateDemoLabelForCurrentPhase();
+      setDemoTimeout(function(){showDemoAnswer(epoch)},1400);
+    },500);
+  }
+}
+
+function showDemoAnswer(epoch){
+  if(epoch!==demoEpoch)return;
+  demoCells[DEMO_CHANGED_CELL].classList.add('correct');
+  demoCells[DEMO_CHANGED_CELL].textContent=(DEMO_CHANGE_POS+1);
+  setDemoTimeout(function(){
+    if(epoch!==demoEpoch)return;
+    demoCells[DEMO_ORIGINAL_CELL].classList.add('lit');
+    demoCells[DEMO_ORIGINAL_CELL].textContent=(DEMO_CHANGE_POS+1);
+    showDemoSuccess(epoch);
+  },350);
+}
+
+function showDemoSuccess(epoch){
+  if(epoch!==demoEpoch)return;
+  demoPhase='success';
+  updateDemoLabelForCurrentPhase();
+  demoCourt.classList.add('joy-pulse');
+  setTimeout(function(){demoCourt.classList.remove('joy-pulse')},500);
+  setDemoTimeout(function(){runDemoRound(epoch)},2200);
+}
+
+function startDemo(){demoEpoch++;clearDemoTimeouts();runDemoRound(demoEpoch)}
+
+initDemoCourt();
+updateUILanguage();
+startDemo();
+
+var toggle=document.getElementById('playbookToggle');
+var content=document.getElementById('playbookContent');
+toggle.addEventListener('click',function(){
+  toggle.classList.toggle('open');
+  content.classList.toggle('open');
+});
+})();
+</script>
+</body>
+</html>
