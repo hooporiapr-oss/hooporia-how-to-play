@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Hooporia Dynamic Memory · How To Play</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  height:100%;
+  overflow:hidden;
+  background:#000;
+  user-select:none;-webkit-user-select:none;
+  touch-action:manipulation;
+}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+}
+
+#stage{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:radial-gradient(ellipse at center,#1a0f0f 0%,#000 70%);
+}
+
+#panel{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:820px;
+  max-height:100%;
+  overflow-y:auto;
+  text-align:center;
+}
+#panel::-webkit-scrollbar{width:6px}
+#panel::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:10px}
+
+.hub-kicker{
+  font-size:.68rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;
+  color:#7d7268;margin-bottom:10px;
+}
+.arena-title{
+  font-size:2rem;
+  font-weight:900;
+  font-style:italic;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  margin:0 0 4px;
+  text-shadow:0 0 30px rgba(243,116,24,.4);
+}
+.arena-title span{color:#f37418}
+.arena-sub{
+  font-size:.85rem;
+  font-weight:700;
+  color:#c9b8a8;
+  letter-spacing:.03em;
+  margin-bottom:8px;
+}
+.how-to-play-label{
+  font-size:.72rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;
+  color:#7c3aed;margin-bottom:26px;
+}
+
+.quarters-label{
+  font-size:.68rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;
+  color:#7d7268;margin-bottom:12px;
+}
+.quarter-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  max-width:640px;margin:0 auto 22px;
+}
+.quarter-card{
+  display:block;text-decoration:none;padding:16px 14px;border-radius:14px;
+  border:1.5px solid rgba(124,58,237,.35);background:rgba(124,58,237,.08);
+  text-align:left;transition:background .12s,border-color .12s,transform .08s;
+}
+.quarter-card:active{transform:scale(.97);background:rgba(124,58,237,.16)}
+.quarter-num{
+  font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
+  color:#a855f7;margin-bottom:4px;
+}
+.quarter-name{
+  font-size:1.05rem;font-weight:900;font-style:italic;letter-spacing:.01em;
+  text-transform:uppercase;color:#fff;margin-bottom:4px;line-height:1.1;
+}
+.quarter-desc{font-size:.68rem;color:#c9b8a8;line-height:1.4}
+
+footer{
+  margin-top:8px;
+  font-size:.72rem;
+  color:#6b5d52;
+  letter-spacing:.02em;
+}
+
+@media(max-width:480px){
+  .arena-title{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="panel">
+    <div class="hub-kicker">🧠 Memory Basketball</div>
+    <div class="arena-title">DYNAMIC <span>MEMORY</span></div>
+    <div class="arena-sub">Memory-Based Basketball Challenges</div>
+    <div class="how-to-play-label">How To Play</div>
+
+    <div class="quarters-label">Pick A Quarter</div>
+    <div class="quarter-grid">
+      <a class="quarter-card" href="dynamic-memory-recall-how-to-play.html">
+        <div class="quarter-num">Q1</div>
+        <div class="quarter-name">Recall</div>
+        <div class="quarter-desc">Watch a pattern flash all at once, then repeat it back in order.</div>
+      </a>
+      <a class="quarter-card" href="dynamic-memory-reflex-how-to-play.html">
+        <div class="quarter-num">Q2</div>
+        <div class="quarter-name">Reflex</div>
+        <div class="quarter-desc">Spot the targets, then tap them all back — any order, as fast as you can.</div>
+      </a>
+      <a class="quarter-card" href="dynamic-memory-replay-how-to-play.html">
+        <div class="quarter-num">Q3</div>
+        <div class="quarter-name">Replay</div>
+        <div class="quarter-desc">Watch the sequence one cell at a time, then repeat it back in order.</div>
+      </a>
+      <a class="quarter-card" href="dynamic-memory-recognition-how-to-play.html">
+        <div class="quarter-num">Q4</div>
+        <div class="quarter-name">Recognition</div>
+        <div class="quarter-desc">Watch the original, then spot what changed in the echo that follows.</div>
+      </a>
+    </div>
+
+    <footer>Gostar Digital LLC</footer>
+  </div>
+</div>
+
+</body>
+</html>
